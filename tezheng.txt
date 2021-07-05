@@ -1,0 +1,47 @@
+CDR
+    2年-1 3年-3
+RPY #还款率
+    sum(N*Rt^2*year)/sum(N)
+    compl
+    dep
+    female
+    firstgen
+    hi_inc
+    ind
+    lo_inc
+    male
+    md_inc
+    noncom
+    nopell
+    nonfirstgen
+
+
+bbrr #
+    年份
+    同rpy处理方法
+
+    DFLT #违约 1
+    DLNQ #拖欠 0.8
+    FBR #宽容期 付但没全付 0.5
+    DFR #延期（补贴期） 0.2
+    NOPROG #按期还款，但贷款数很大 0.5
+    MAKEPROG #按期还款，贷款数不大 0.2
+    PAIDINFULL #足额支付 0
+    DISCHARGE #义务取消 0
+    N #数量 似乎没有用
+
+    本科 FED 与 PP #个人贷款系数0.5 学生贷款系数 1
+    研究生 
+
+    本科完成状态： （与学业解耦） 本科0.5 研究生1
+        UG 1
+        UGCOMP
+        UGNOCOMP
+        UGUNK
+    研究生完成状态
+        GR
+        GRCOMP
+        GRNOCOMP
+
+     
+
