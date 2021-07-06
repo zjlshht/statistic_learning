@@ -1,25 +1,50 @@
-CDR
-    2年-1 3年-3
+# 自己写的时候可以写个namedtuple
+CDR 2 3
+    sum(Rt*year^2)/2
 RPY #还款率
-    sum(N*Rt^2*year)/sum(N)
-    compl
-    dep
-    female
-    firstgen
-    hi_inc
-    ind
-    lo_inc
-    male
-    md_inc
-    noncom
-    nopell
-    nonfirstgen
+    year 1 3 5 7
+    sum(N*Rt*year^2)/sum(N)
+
+    前缀
+    compl #完成 1
+    noncom #未完成 1.5
+    dep #依赖 0.8
+    ind #独立 1
+    female #女性 1
+    male #男性   1
+    firstgen #第一代 1.1
+    nonfirstgen # 非第一代 1
+    hi_inc #家庭高收入 0.5
+    lo_inc #家庭低收入 2
+    md_inc #家庭中等收入 1
+    nopell #无奖学金 1.1
+
+    前缀阈值*加权还款率/12
+
+
+
+dbrr #  
+    年份  1 4 5 10 20
+    同rpy处理方法
+
+    MEtrics
+    NUM #未偿还余额 
+    DEN #最初支付金额
+    RT #前两者比例
+    N #进入还款的借款人数量
+        N*RT*year
+
+    LOAN
+
+    GROUP
+
 
 
 bbrr #
-    年份
+    年份 1 2
     同rpy处理方法
 
+    Status
     DFLT #违约 1
     DLNQ #拖欠 0.8
     FBR #宽容期 付但没全付 0.5
@@ -30,18 +55,116 @@ bbrr #
     DISCHARGE #义务取消 0
     N #数量 似乎没有用
 
+    LOAN
     本科 FED 与 PP #个人贷款系数0.5 学生贷款系数 1
     研究生 
 
+    GROUP
     本科完成状态： （与学业解耦） 本科0.5 研究生1
-        UG 1
-        UGCOMP
-        UGNOCOMP
-        UGUNK
+        UG 1.2
+        UGCOMP 1.1
+        UGNOCOMP 1
+        UGUNK 1
     研究生完成状态
-        GR
-        GRCOMP
-        GRNOCOMP
+        GR 1.5
+        GRCOMP 1.5
+        GRNOCOMP 1
+
+# debt 应该放指数里
+ 10个通用前缀*2 MDN N （NONFIRSTGEN FIRSTGEN DEP FEMALE MALE
+            IND HI MD LO NOPELL）
+ CUML_DEBT_(N，P10，P25，P75，P90)
+ DEBT_MDN
+ DEBT_MDN_SUPP
+ DEBT_N
+
+ GRAD开头的5个 
+___________________________________________________________________
+#少数族裔处理 minority-serving default 0
+minority_serving={'HBCU','PBI','ANNHI','AANAPII','HSI','NANTI'} 
+#ACT 成绩
+'''
+EN英语 MT数学 WR写作 CM综合 3个分位数  还可以构建一个等差指数
+'''
+#HIGHDEG  0-4 五个等级
+
+#HCM2 0-1
+
+#CIP 0-2 可以自己试试
+
+#INEXPFTE 每个 FTE 学生的教学支出 (INEXPFTE) 使用教学支出除以 FTE 学生人数  取横比和最大最小
+#AVGFACSAL 职工平均工资
+
+#C 完成率 100 和150  4和L4（不到四年） POOLED两年的汇总 
+   #建议选取C100_4 C00_4_POLLED ratio 以及L
+   #C150是按种族分的 感觉可以分为 白 黑 亚 其他
+   
+#CONTROL 1-3 1:0 2: 1 3:0.5或者mean
+
+#FTFTPCTFLOAN FTFTPCTPELL 两个比例特征
+
+#MAIN5 区分是不是主校区
+
+#MARRIED 是否婚配 几乎是nan 不用
+
+#PCIP和cip似乎可以作模糊特征  不过太多了
+
+# LATITUDE 经度 LONGITUDE 纬度 
+
+#   PCT
+    计算具有来自联邦学生援助免费申请 
+    (FAFSA) 的家庭收入数据的 Title IV 接收学生的百分比
+    LO :0-3w
+    M1 :3-4.8w
+    M2 :4.8-7.5w
+    H1 :7.5-11w
+    H2 :11w+
+    前缀是inc(收入) 和DEO_INC IND_INC
+
+# 第一代学生比例
+    PAR_ED_N数量
+    PAR_ED_PCT_1STGEN比例
+    PAR_ED_PCT_HS高中
+    PAR_ED_PCT_MS初中
+    PAR_ED_PCT_PS小学
+
+# 学年机构 (COSTT4_A) 和课程机构 (COSTT4_P)的花费
+
+#这些数据包括基本分类 (CCBASIC)、本科概况 (CCUGPROF) 和规模和环境分类 (CCSIZSET)
+#三个奇怪的分类
+
+#COMP_*(2,4)YR_TRANS_YR*(2,3,4,6,8)_RT 转学并在m年完成n年制
+#COMP_ORIG_YR*(2,3,4,6,8)_RT  原机构完成n年制
+ #COMP WDRAW（退学） 同理  
+ # ENRL极为特殊 多个前缀 （无前缀和后面12个）
+ # UNKN特殊 多个前缀 （IND LOAN LO_INC MALE MD_INC HI_INC NOLOAN nopell
+                NOT1STGEN  DEP FEMALE FIRSTGEN)共12个  
+ #死亡的学生比例 (DEATH_YR*_RT)(2,3,4,6,8)
+
+ #MTHCMP 后缀1-6
+#完成每个课程的完整学习课程通常需要的月数 (MTHCMP[1-6])。
+
+#OPEFLAG 机构类别0-3 和其他（5，6，7，8）
+
+#学费 NPT41-NPT45 
+    #收入五分位数17 是： 
+    (1) $0-$30,000； 
+    (2) $30,001-$48,000； 
+    (3) $48,001-$75,000； 
+    (4) $75,001-$110,000； 
+    (5) 110,000 美元以上。
+    #而按收入五分位数的平均净价格（
+    #_PUB 和 _PRIV，
+    #以及 _PROG [主要遵循基于计划或连续招生日历系统的机构] 
+    #_OTHER [其他学术日历机构]) (四个后缀)
+
+    中间还有4_048;4_3075 ;4_75UP;空四个选择 也是分为数方法 
+    所以一个9个中间 4个后缀
+
+#单家庭收入平均： 想用 但都是nan
+    FAMINC MD_FAMINC（中等家庭） 
+    FAMINC_IND（独立学生）LNFAMINC LNFAMINC_IND(后两个是nan)
+
 
      
 
