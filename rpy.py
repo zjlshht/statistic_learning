@@ -10,11 +10,21 @@ def wash_data(column, default):
         res.append(tmp)
     return res
 
-
+#read file
 df = pd.read_csv('MERGED2018_19_PP.csv')
+columns=df.columns
+
+
+#CDR_INDEX
 CDR2 = df['CDR2']
 CDR3 = df['CDR3']
+_CDR2 =wash_data(CDR2.values,0)
+_CDR3 =wash_data(CDR3.values,0)
 n = len(CDR2)
+CDR_INDEX=_CDR2/2+_CDR3/3
+
+
+#RPY_INDEX
 RPY_year = ['1', '3', '5', '7']
 RPY_before = ['COMPL',
               'DEP',
@@ -60,8 +70,50 @@ for before in RPY_before:
         RPY_RT = df[rate]
         _RPY_RT = wash_data(RPY_RT.values, RPY_RT.mean())
         for i in range(n):
-            RPY_index_up[i] += _RPY_N[i]*_RPY_RT[i]*int(year)**2
+            RPY_index_up[i] += _RPY_N[i]*_RPY_RT[i]/int(year)
             RPY_index_dowm[i] += _RPY_N[i]
     for i in range(n):
         RPY_index_by_type[i] = RPY_index_up[i]/(RPY_index_dowm[i]+1)
         RPY_index[i] += RPY_index_by_type[i]*RPY_weight[before]
+
+
+#DBRR
+LOAN=['FED','PP']
+GROUP=['UG','UGCOMP','UGNOCOMP','UGUNK','GR','GRCOMP','GRNOCOMP']
+YEAR=['1','4','5','10','20']
+METRICS=['RT','N']
+LOAN_weight={
+    "FED":1,
+    "PP":0.5
+}
+GROUP_weight={
+    "UG":1,
+    "GR":1.2,
+    "UGCOMP":0.8,
+    "UGNOCOMP":0.5,
+    "UGUNK":0.5,
+    "GRCOMP":1,
+    "GRNOCOMP":0.5
+}
+DBRR_index_up = [0 for i in range(n)]
+DBRR_index_dowm = DBRR_index_up.copy()
+DBRR_index_by_type = DBRR_index_up.copy()
+DBRR_index = DBRR_index_up.copy()
+def judge(name,column):
+    if name in column:
+        return True
+    else:
+        return False
+for loan in LOAN:
+    for group in GROUP:
+        for year in YEAR:
+            rt_column_name='DBRR'+year+'_'+loan+'_'+group+'_RT'
+            n_colunm_name='DBRR'+year+'_'+loan+'_'+group+'_N'
+            if judge(rt_column_name,columns):
+                rt_column=df[rt_column_name]
+                n_column=df[n_colunm_name]
+            _rt_column=wash_data(rt_column.values,rt_column.mean())
+            _n_column=wash_data(n_column.values,n_column.mean())
+            for i in range(n):
+                DBRR_index_up+=
+

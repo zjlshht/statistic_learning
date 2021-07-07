@@ -1,11 +1,12 @@
 # 自己写的时候可以写个namedtuple
 CDR 2 3
-    sum(Rt*year^2)/2
+    各自除
 RPY #还款率
     year 1 3 5 7
-    sum(N*Rt*year^2)/sum(N)
+    sum(N*Rt/year)/sum(N)
 
     前缀
+    无前缀 1
     compl #完成 1
     noncom #未完成 1.5
     dep #依赖 0.8
@@ -71,14 +72,15 @@ bbrr #
         GRNOCOMP 1
 
 # debt 应该放指数里
- 10个通用前缀*2 MDN N （NONFIRSTGEN FIRSTGEN DEP FEMALE MALE
-            IND HI MD LO NOPELL）
- CUML_DEBT_(N，P10，P25，P75，P90)
+ 14个通用前缀*2 MDN贷款债务中位数 N 人数
+    （NONFIRSTGEN FIRSTGEN DEP FEMALE MALE
+            IND HI MD LO NOPELL PELL WDRAW，GRAD毕业，无前缀）
+ CUML_DEBT_(N，P10，P25，P75，P90) 累计 #似乎没数据
  DEBT_MDN
  DEBT_MDN_SUPP
  DEBT_N
-
- GRAD开头的5个 
+  自己可以用方差描述
+  
 ___________________________________________________________________
 #少数族裔处理 minority-serving default 0
 minority_serving={'HBCU','PBI','ANNHI','AANAPII','HSI','NANTI'} 
@@ -134,12 +136,15 @@ EN英语 MT数学 WR写作 CM综合 3个分位数  还可以构建一个等差�
 #三个奇怪的分类
 
 #COMP_*(2,4)YR_TRANS_YR*(2,3,4,6,8)_RT 转学并在m年完成n年制
-#COMP_ORIG_YR*(2,3,4,6,8)_RT  原机构完成n年制
- #COMP WDRAW（退学） 同理  
- # ENRL极为特殊 多个前缀 （无前缀和后面12个）
+#COMP_ORIG_YR*(2,3,4,6,8)_RT  原机构完成n年制 与上共15个
+
+ #COMP
+    无前缀 + 下13个前缀 *15
+ #WDRAW（退学）   同上 14*15
+ # ENRL极为特殊 多个前缀 （无前缀和后面13个）
  # UNKN特殊 多个前缀 （IND LOAN LO_INC MALE MD_INC HI_INC NOLOAN nopell
-                NOT1STGEN  DEP FEMALE FIRSTGEN)共12个  
- #死亡的学生比例 (DEATH_YR*_RT)(2,3,4,6,8)
+                NOT1STGEN  DEP FEMALE FIRSTGEN PELL)共13个  和无前缀
+ #死亡的学生比例 (DEATH_YR*_RT)(2,3,4,6,8) 5*14
 
  #MTHCMP 后缀1-6
 #完成每个课程的完整学习课程通常需要的月数 (MTHCMP[1-6])。
@@ -165,6 +170,29 @@ EN英语 MT数学 WR写作 CM综合 3个分位数  还可以构建一个等差�
     FAMINC MD_FAMINC（中等家庭） 
     FAMINC_IND（独立学生）LNFAMINC LNFAMINC_IND(后两个是nan)
 
+#REGION 
 
-     
+#POOLYRSOM 滚动平均值所用的年数 九个后缀
+    POOLYRSRET_FT POOLYRSRET_PT
 
+#RET相关的留存率需要注意
+
+#DEPENDENT 受无氧学生比例 与结婚和老将VETERAN 一起处理
+
+#TUITFTE 学费净收入
+    #The net tuition revenue per full-time equivalent (FTE) 
+    student (TUITFTE) uses tuition revenue minus discounts 
+    and allowances, and divides that by the number of FTE 
+    undergraduate and graduate students. 
+    They are provided for in-state students (TUITIONFEE_IN),
+    out-of-state students (TUITIONFEE_OUT), and program-year 
+    institutions (TUITIONFEE_PROG) 州内外学生 和计划年机构
+
+#UGDS 该元素 (UGDS) 包括秋季入学的学位/寻求证书的本科生人数
+    后缀也是按种族分的 和c 那里比较像
+    men (UGDS_MEN), women (UGDS_WOMEN), white
+    (UGDS_WHITE), black (UGDS_BLACK), Hispanic (UGDS_HISP), Asian
+    (UGDS_ASIAN), American Indian/Alaska Native (UGDS_AIAN), Native
+    Hawaiian/Pacific Islander (UGDS_NHPI), two or more races
+    (UGDS_2MOR), non-resident aliens (UGDS_NRA), and race unknown
+    (UGDS_UNKN). 没出现的就不用了 UG_的
