@@ -105,7 +105,7 @@ EN英语 MT数学 WR写作 CM综合 3个分位数  还可以构建一个等差�
 
 #FTFTPCTFLOAN FTFTPCTPELL 两个比例特征
 
-#MAIN5 区分是不是主校区
+#MAIN 区分是不是主校区 没有？
 
 #MARRIED 是否婚配 几乎是nan 不用
 
