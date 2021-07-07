@@ -56,7 +56,7 @@ CDR3 = df['CDR3']
 _CDR2 =wash_data(CDR2.values,0)
 _CDR3 =wash_data(CDR3.values,0)
 n = len(CDR2)
-CDR_INDEX=_CDR2/2+_CDR3/3
+CDR_index=_CDR2/2+_CDR3/3
 
 
 #RPY_INDEX
@@ -221,8 +221,14 @@ for loan in LOAN:
             BBRR_index_by_type[i]=BBRR_index_up[i]/(BBRR_index_dowm[i]+1e-6) #年加权nrt    
             BBRR_index[i]+=BBRR_index_by_type[i]*LOAN_weight[loan]*GROUP_weight[group]             
 
-
-
+Final_index=np.zeros(n)
+for i in range(n):
+    Final_index[i]=DBRR_index[i]*BBRR_index[i]/(BBRR_index[i]+6)/(DBRR_index[i]+20)/(1-CDR_index[i])
+max_index=max(Final_index)
+min_index=min(Final_index)
+strandard_index=np.zeros(n)
+for i in range(n):
+    strandard_index[i]=(Final_index[i]-min_index)/(max_index-min_index)
             
             
 
