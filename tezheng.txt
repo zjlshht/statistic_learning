@@ -196,3 +196,5 @@ EN英语 MT数学 WR写作 CM综合 3个分位数  还可以构建一个等差�
     Hawaiian/Pacific Islander (UGDS_NHPI), two or more races
     (UGDS_2MOR), non-resident aliens (UGDS_NRA), and race unknown
     (UGDS_UNKN). 没出现的就不用了 UG_的
+
+#OMAWDP
