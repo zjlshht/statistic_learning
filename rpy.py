@@ -75,7 +75,8 @@ RPY_before = ['',
               'HI_INC_',
               'MD_INC_',
               'LO_INC_',
-              'NOPELL_']
+              'NOPELL_',
+              "PELL_"]
 RPY_weight = {
     '': 1,
     'COMPL_': 1,
@@ -338,3 +339,72 @@ LONGITUDE_tmp=df['LONGITUDE']
 LONGITUDE=wash_data(LONGITUDE_tmp.values,0)
 LONGITUDE/=180
 X_data.append(LONGITUDE)
+
+COSTT4_P_tmp=df['COSTT4_P']
+COSTT4_P=wash_data(COSTT4_P.values,COSTT4_P.mean())
+COSTT4_P/=COSTT4_P.max()
+X_data.append(COSTT4_P)
+
+COSTT4_A_tmp=df['COSTT4_A']
+COSTT4_A=wash_data(COSTT4_A.values,COSTT4_A.mean())
+COSTT4_A/=COSTT4_A.max()
+X_data.append(COSTT4_A)
+
+Student_class = ['',
+              'COMPL_',
+              'DEP_',
+              'NONCOM_',
+              'IND_',
+              'FEMALE_',
+              'MALE_',
+              'FIRSTGEN_',
+              'NOT1STGEN',
+              'HI_INC_',
+              'MD_INC_',
+              'LO_INC_',
+              'NOPELL_',
+              'PELL_']
+Student_status = [
+    'COMP',
+    'WDRAW',
+    'ENRL',
+    'UNKN'
+]
+YEAR=['2','3','4','6','8']
+WDRAW_index=np.zeros(n)
+COMP_index=np.zeros(n)
+for classs in Student_class:
+    for year in YEAR:
+        name1= classs+'WDRAW'+'_2YR_'+'TRANS_YR'+year+'_RT'
+        name2= classs+'WDRAW'+'_4YR_'+'TRANS_YR'+year+'_RT'
+        name3= classs+'COMP'+'_2YR_'+'TRANS_YR'+year+'_RT'
+        name4= classs+'COMP'+'_4YR_'+'TRANS_YR'+year+'_RT'
+        column1=df[name1]
+        _column1=wash_data(column1.values,column1.mean())
+        column2=df[name2]
+        _column2=wash_data(column2.values,column2.mean())
+        column3=df[name3]
+        _column3=wash_data(column3.values,column3.mean())
+        column4=df[name4]
+        _column4=wash_data(column4.values,column4.mean())
+        WDRAW_index+=_column1
+        WDRAW_index+=_column2
+        COMP_index+=_column3
+        COMP_index+=_column4
+
+MTHCMP=np.zeros(n)
+MTHCMP_type=['1','2','3','4','5','6']
+for types in MTHCMP_type:
+    name='MTHCMP'+types
+    column=df[name]
+    _column=wash_data(column.values,column.mean())
+    MTHCMP+=_column
+
+OPEFLAG=df['OPEFLAG'].values
+OPEFLAG[OPEFLAG!=1]=2
+
+
+
+
+
+
