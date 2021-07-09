@@ -111,7 +111,7 @@ EN英语 MT数学 WR写作 CM综合 3个分位数  还可以构建一个等差�
 
 #PCIP和cip似乎可以作模糊特征  不过太多了
 
-# LATITUDE 经度 LONGITUDE 纬度 
+# LATITUDE w度 LONGITUDE j度 
 
 #   PCT
     计算具有来自联邦学生援助免费申请 
