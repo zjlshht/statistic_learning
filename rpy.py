@@ -1,5 +1,3 @@
-from datetime import date
-from os import X_OK
 import pandas as pd
 import numpy as np
 
@@ -240,6 +238,26 @@ min_index = min(Final_index)
 standard_index = np.zeros(n)
 for i in range(n):
     standard_index[i] = (Final_index[i]-min_index)/(max_index-min_index)
+
+shows=list(CDR_index)
+shows.sort()
+plt.bar(range(n),shows)
+plt.show()
+
+shows=list(BBRR_index)
+shows.sort()
+plt.bar(range(n),shows)
+plt.show()
+
+shows=list(DBRR_index)
+shows.sort()
+plt.bar(range(n),shows)
+plt.show()
+
+shows=list(Final_index)
+shows.sort()
+plt.bar(range(n),shows)
+plt.show()
 
 X_data = []
 minority_serving = {'HBCU', 'PBI', 'ANNHI', 'AANAPII', 'HSI', 'NANTI'}
@@ -496,6 +514,108 @@ plt.ylabel("y_predict")
 plt.legend(loc='upper left')
 plt.show()
 
+from sklearn.neighbors import KNeighborsRegressor
+model = KNeighborsRegressor(n_neighbors=5)
+model.fit(X_train,y_train)
+train_score=model.score(X_train,y_train)
+test_score=model.score(X_test,y_test)
+y_predict=model.predict(X_test)
+y_model_pred=model.predict(X_train)
+plt.scatter(y_test,y_predict,color="r",s=5,  label="train data:R^2={:.2f}".format(train_score))
+plt.scatter(y_train,y_model_pred,color="b",s=5,  label="test data:R^2={:.2f}".format(test_score))
+plt.plot([0,1],[0,1],color="g",linestyle="-", linewidth=1)
+plt.title("true and predict")
+plt.xlabel("y_true")
+plt.ylabel("y_predict")
+plt.legend(loc='upper left')
+plt.show()
+
+
+model = KNeighborsRegressor(n_neighbors=10)
+model.fit(X_train,y_train)
+train_score=model.score(X_train,y_train)
+test_score=model.score(X_test,y_test)
+y_predict=model.predict(X_test)
+y_model_pred=model.predict(X_train)
+plt.scatter(y_test,y_predict,color="r",s=5,  label="train data:R^2={:.2f}".format(train_score))
+plt.scatter(y_train,y_model_pred,color="b",s=5,  label="test data:R^2={:.2f}".format(test_score))
+plt.plot([0,1],[0,1],color="g",linestyle="-", linewidth=1)
+plt.title("true and predict")
+plt.xlabel("y_true")
+plt.ylabel("y_predict")
+plt.legend(loc='upper left')
+plt.show()
+
+
+model = KNeighborsRegressor(n_neighbors=15)
+model.fit(X_train,y_train)
+train_score=model.score(X_train,y_train)
+test_score=model.score(X_test,y_test)
+y_predict=model.predict(X_test)
+y_model_pred=model.predict(X_train)
+plt.scatter(y_test,y_predict,color="r",s=5,  label="train data:R^2={:.2f}".format(train_score))
+plt.scatter(y_train,y_model_pred,color="b",s=5,  label="test data:R^2={:.2f}".format(test_score))
+plt.plot([0,1],[0,1],color="g",linestyle="-", linewidth=1)
+plt.title("true and predict")
+plt.xlabel("y_true")
+plt.ylabel("y_predict")
+plt.legend(loc='upper left')
+plt.show()
+
+
+from sklearn.tree import DecisionTreeRegressor
+model = DecisionTreeRegressor(random_state=0)
+X=X_data_final[:79].T
+y=X_data_final[79]
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=999)
+model.fit(X_train,y_train)
+train_score=model.score(X_train,y_train)
+test_score=model.score(X_test,y_test)
+y_predict=model.predict(X_test)
+y_model_pred=model.predict(X_train)
+plt.scatter(y_test,y_predict,color="r",s=5,  label="train data:R^2={:.2f}".format(train_score))
+plt.scatter(y_train,y_model_pred,color="b",s=5,  label="test data:R^2={:.2f}".format(test_score))
+plt.plot([0,1],[0,1],color="g",linestyle="-", linewidth=1)
+plt.title("true and predict")
+plt.xlabel("y_true")
+plt.ylabel("y_predict")
+plt.legend(loc='upper left')
+plt.show()
+
+
+from sklearn.ensemble import AdaBoostRegressor
+model = AdaBoostRegressor(random_state=0, n_estimators=100,loss='square')
+model.fit(X_train,y_train)
+train_score=model.score(X_train,y_train)
+test_score=model.score(X_test,y_test)
+y_predict=model.predict(X_test)
+y_model_pred=model.predict(X_train)
+plt.scatter(y_test,y_predict,color="r",s=5,  label="train data:R^2={:.2f}".format(train_score))
+plt.scatter(y_train,y_model_pred,color="b",s=5,  label="test data:R^2={:.2f}".format(test_score))
+plt.plot([0,1],[0,1],color="g",linestyle="-", linewidth=1)
+plt.title("true and predict")
+plt.xlabel("y_true")
+plt.ylabel("y_predict")
+plt.legend(loc='upper left')
+plt.show()
+
+
+model = AdaBoostRegressor(random_state=0, n_estimators=100,loss='square',learning_rate=0.1)
+model.fit(X_train,y_train)
+train_score=model.score(X_train,y_train)
+test_score=model.score(X_test,y_test)
+y_predict=model.predict(X_test)
+y_model_pred=model.predict(X_train)
+plt.scatter(y_test,y_predict,color="r",s=5,  label="train data:R^2={:.2f}".format(train_score))
+plt.scatter(y_train,y_model_pred,color="b",s=5,  label="test data:R^2={:.2f}".format(test_score))
+plt.plot([0,1],[0,1],color="g",linestyle="-", linewidth=1)
+plt.title("true and predict")
+plt.xlabel("y_true")
+plt.ylabel("y_predict")
+plt.legend(loc='upper left')
+plt.show()
+
+
 from sklearn.ensemble import RandomForestRegressor
 model=RandomForestRegressor(max_depth=10, random_state=0)
 model.fit(X_train,y_train)
@@ -512,17 +632,19 @@ plt.ylabel("y_predict")
 plt.legend(loc='upper left')
 plt.show()
 
-shows=list(CDR_index)
-shows.sort()
-plt.bar(range(n),shows)
+model=RandomForestRegressor(max_depth=15, random_state=0)
+model.fit(X_train,y_train)
+train_score=model.score(X_train,y_train)
+test_score=model.score(X_test,y_test)
+y_predict=model.predict(X_test)
+y_model_pred=model.predict(X_train)
+plt.scatter(y_test,y_predict,color="r",s=5,  label="train data:R^2={:.2f}".format(train_score))
+plt.scatter(y_train,y_model_pred,color="b",s=5,  label="test data:R^2={:.2f}".format(test_score))
+plt.plot([0,1],[0,1],color="g",linestyle="-", linewidth=1)
+plt.title("true and predict")
+plt.xlabel("y_true")
+plt.ylabel("y_predict")
+plt.legend(loc='upper left')
 plt.show()
 
-shows=list(BBRR_index)
-shows.sort()
-plt.bar(range(n),shows)
-plt.show()
 
-shows=list(DBRR_index)
-shows.sort()
-plt.bar(range(n),shows)
-plt.show()
