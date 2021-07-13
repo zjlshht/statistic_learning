@@ -232,7 +232,7 @@ OPEFLAG[OPEFLAG!=1]=0
 X_data.append(OPEFLAG)
 
 Tuition_type=['41','42','43','44','45','4_048','4_3075','4_75UP','4']
-School_type=['OTHER','PRIV','PROG','PUB']
+School_type=['OTHER','PRIV','PROG','PUB']   
 for tuition in Tuition_type:
     for _type in School_type:
         name = 'NPT'+tuition+'_'+_type
@@ -265,10 +265,10 @@ X_test = scaler.transform(X_test)
 from sklearn.linear_model import LinearRegression
 model=LinearRegression()
 model.fit(X_train,y_train)
-train_score=model.score(X_train,y_train)
-test_score=model.score(X_test,y_test)
 y_predict=model.predict(X_test)
 y_model_pred=model.predict(X_train)
+train_score=model.score(X_train,y_train)
+test_score=model.score(X_test,y_test)
 plt.scatter(y_test,y_predict,color="r",s=5,  label="train data:R^2={:.2f}".format(train_score))
 plt.scatter(y_train,y_model_pred,color="b",s=5,  label="test data:R^2={:.2f}".format(test_score))
 plt.plot([0,1],[0,1],color="g",linestyle="-", linewidth=1)
@@ -277,21 +277,21 @@ plt.xlabel("y_true")
 plt.ylabel("y_predict")
 plt.legend(loc='upper left')
 plt.show()
-from sklearn.linear_model import LogisticRegression
-model=LogisticRegression()
-model.fit(X_train,y_train)
-train_score=model.score(X_train,y_train)
-test_score=model.score(X_test,y_test)
-y_predict=model.predict(X_test)
-y_model_pred=model.predict(X_train)
-plt.scatter(y_test,y_predict,color="r",s=5,  label="train data:R^2={:.2f}".format(train_score))
-plt.scatter(y_train,y_model_pred,color="b",s=5,  label="test data:R^2={:.2f}".format(test_score))
-plt.plot([0,1],[0,1],color="g",linestyle="-", linewidth=1)
-plt.title("true and predict")
-plt.xlabel("y_true")
-plt.ylabel("y_predict")
-plt.legend(loc='upper left')
-plt.show()
+# from sklearn.linear_model import LogisticRegression
+# model=LogisticRegression()
+# model.fit(X_train,y_train)
+# train_score=model.score(X_train,y_train)
+# test_score=model.score(X_test,y_test)
+# y_predict=model.predict(X_test)
+# y_model_pred=model.predict(X_train)
+# plt.scatter(y_test,y_predict,color="r",s=5,  label="train data:R^2={:.2f}".format(train_score))
+# plt.scatter(y_train,y_model_pred,color="b",s=5,  label="test data:R^2={:.2f}".format(test_score))
+# plt.plot([0,1],[0,1],color="g",linestyle="-", linewidth=1)
+# plt.title("true and predict")
+# plt.xlabel("y_true")
+# plt.ylabel("y_predict")
+# plt.legend(loc='upper left')
+# plt.show()
 from sklearn.svm import SVR
 model=SVR(kernel='poly')
 model.fit(X_train,y_train)
