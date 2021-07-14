@@ -135,10 +135,12 @@ for classs in ACT_class:
         X_data.append(_data)
 
 HIGHDEG = df['HIGHDEG'].values
-X_data.append(HIGHDEG)
+_HIGHDEG=wash_data(HIGHDEG,HIGHDEG.mean())
+X_data.append(_HIGHDEG)
 
 HCM2 = df['HCM2'].values
-X_data.append(HCM2)
+_HCM2=wash_data(HCM2,HCM2.mean())
+X_data.append(_HCM2)
 
 INEXPFTE_tmp = df['INEXPFTE']
 INEXPFTE = wash_data(INEXPFTE_tmp.values, INEXPFTE_tmp.mean())
@@ -212,17 +214,15 @@ for classs in Student_class:
         name3= classs+'COMP'+'_2YR_'+'TRANS_YR'+year+'_RT'
         name4= classs+'COMP'+'_4YR_'+'TRANS_YR'+year+'_RT'
         column1=df[name1]
-        _column1=wash_data(column1.values,column1.mean())
+        _column1=wash_str_data(column1.values)
         column2=df[name2]
-        _column2=wash_data(column2.values,column2.mean())
+        _column2=wash_str_data(column2.values)
         column3=df[name3]
-        _column3=wash_data(column3.values,column3.mean())
+        _column3=wash_str_data(column3.values)
         column4=df[name4]
-        _column4=wash_data(column4.values,column4.mean())
-        WDRAW_index+=_column1
-        WDRAW_index+=_column2
-        COMP_index+=_column3
-        COMP_index+=_column4
+        _column4=wash_str_data(column4.values)
+        WDRAW_index =_column1+_column2+WDRAW_index
+        COMP_index =_column3+_column4+COMP_index
 X_data.append(WDRAW_index)
 X_data.append(COMP_index)
 
