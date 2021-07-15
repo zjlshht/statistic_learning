@@ -106,3 +106,45 @@ for group in GROUP:
         DBRR_index_down=DBRR_n*int(year)
     DBRR_index_by_group=DBRR_index_up/(DBRR_index_down+1e-8) 
     DBRR_index+=DBRR_index_by_group/4
+
+# BBRR
+GROUP = ['UG', 'UGCOMP', 'GR', 'GRCOMP']
+YEAR = ['1', '2']
+Status = ['DFLT',
+          'DLNQ',
+          'FBR',
+          'DFR',
+          'NOPROG',
+          'MAKEPROG',
+          'PAIDINFULL',
+          'DISCHARGE']
+Status_weight = {
+    "DFLT": 1,
+    "DLNQ": 0.8,
+    "FBR": 0.5,
+    "DFR": 0.2,
+    "NOPROG": 0.5,
+    "MAKEPROG": 0.2,
+    "PAIDINFULL": 0,
+    "DISCHARGE": 0
+}
+BBRR_index_by_type = np.zeros(n)
+BBRR_index = np.zeros(n)
+for group in GROUP:
+    BBRR_index_up = np.zeros(n)
+    BBRR_index_down = np.zeros(n)
+    for year in YEAR:
+        BBRR_index_up_tmp = np.zeros(n)
+        BBRR_name = 'BBRR'+year+'_'+'FED'+'_'+group+'_'
+        BBRR_n_name = BBRR_name+'N'
+        if judge(BBRR_n_name, column_name):
+            BBRR_n=get_data_from_df(BBRR_n_name,True)
+        else:
+            continue
+        for status in Status:
+            BBRR_rt_name = BBRR_name+status
+            BBRR_rt = get_data_from_df(BBRR_rt_name,True)
+            BBRR_index_up_tmp+=BBRR_rt*Status_weight[status]*_n_column
+        BBRR_index_down+=BBRR_n*int(year)
+        BBRR_index_up+=BBRR_rt*int(year)
+    BBRR_index+=BBRR_index_up/(BBRR_index_down+1e-8)/4
