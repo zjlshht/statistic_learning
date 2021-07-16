@@ -39,7 +39,7 @@ def get_data_from_df(name,replace=False):
 
 
 def column_exist(name, column_name):
-    if name in column:
+    if name in column_name:
         return True
     else:
         return False
@@ -71,6 +71,7 @@ type_weight = {
     "LO_INC_": 2
 }
 RPY_ac_type = np.zeros(n)
+RPY_index_ac_by_type=np.zeros(n)
 for Type in type_weight:
     RPY_index_ac_by_N=np.zeros(n)
     RPY_ac_N=np.zeros(n)
@@ -80,8 +81,8 @@ for Type in type_weight:
         RPY_N = get_data_from_df(numbers,True)
         RPY_RT = get_data_from_df(rate,True)
         RPY_index_ac_by_N += RPY_N * RPY_RT/int(year)
-        RPY_ac_N += RPY_N
-    RPY_index_ac_by_type=RPY_index_ac_by_N*type_weight[Type]/(RPY_ac_N+1e-8)
+        RPY_ac_N += RPY_N/int(year)
+    RPY_index_ac_by_type+=RPY_index_ac_by_N*type_weight[Type]/(RPY_ac_N+1e-8)
     RPY_ac_type+=type_weight[Type]
 RPY_index=RPY_index_ac_by_type/RPY_ac_type
 
@@ -93,17 +94,17 @@ DBRR_index = np.zeros(n)
 
 for group in GROUP:
     DBRR_index_up = np.zeros(n)
-    DBRR_index_dowm = np.zeros(n)
+    DBRR_index_down = np.zeros(n)
     for year in YEAR:
         DBRR_rt_name = 'DBRR'+year+'_'+'FED'+'_'+group+'_RT'
         DBRR_n_name = 'DBRR'+year+'_'+'FED'+'_'+group+'_N'
-        if judge(DBRR_rt_name, column_name):
+        if column_exist(DBRR_rt_name, column_name):
             DBRR_rt = get_data_from_df(DBRR_rt_name,True)  
             DBRR_n = get_data_from_df(DBRR_n_name,True)
         else:
             continue
-        DBRR_index_up=DBRR_rt*DBRR_n*int(year)
-        DBRR_index_down=DBRR_n*int(year)
+        DBRR_index_up+=DBRR_rt*DBRR_n*int(year)
+        DBRR_index_down+=DBRR_n*int(year)
     DBRR_index_by_group=DBRR_index_up/(DBRR_index_down+1e-8) 
     DBRR_index+=DBRR_index_by_group/4
 
@@ -121,30 +122,60 @@ Status = ['DFLT',
 Status_weight = {
     "DFLT": 1,
     "DLNQ": 0.8,
-    "FBR": 0.5,
+    "FBR": 0.4,
     "DFR": 0.2,
-    "NOPROG": 0.5,
+    "NOPROG": 0.4,
     "MAKEPROG": 0.2,
     "PAIDINFULL": 0,
     "DISCHARGE": 0
 }
-BBRR_index_by_type = np.zeros(n)
 BBRR_index = np.zeros(n)
 for group in GROUP:
     BBRR_index_up = np.zeros(n)
     BBRR_index_down = np.zeros(n)
     for year in YEAR:
-        BBRR_index_up_tmp = np.zeros(n)
+        BBRR_index_by_status = np.zeros(n)
         BBRR_name = 'BBRR'+year+'_'+'FED'+'_'+group+'_'
         BBRR_n_name = BBRR_name+'N'
-        if judge(BBRR_n_name, column_name):
+        if column_exist(BBRR_n_name, column_name):
             BBRR_n=get_data_from_df(BBRR_n_name,True)
         else:
             continue
         for status in Status:
             BBRR_rt_name = BBRR_name+status
             BBRR_rt = get_data_from_df(BBRR_rt_name,True)
-            BBRR_index_up_tmp+=BBRR_rt*Status_weight[status]*_n_column
+            BBRR_index_by_status+=BBRR_rt*Status_weight[status]/3
         BBRR_index_down+=BBRR_n*int(year)
-        BBRR_index_up+=BBRR_rt*int(year)
+        BBRR_index_up+=BBRR_index_by_status*BBRR_n*int(year)
     BBRR_index+=BBRR_index_up/(BBRR_index_down+1e-8)/4
+
+#DEBT
+student_type = ['',
+              'GRAD_',
+              'WDRAW_',
+              'HI_INC_',
+              'MD_INC_',
+              'LO_INC_']
+type_weight = {
+    '': 1,
+    'GRAD_': 2,
+    "WDRAW_": 0.5,
+    "HI_INC_": 2,
+    "MD_INC_": 1,
+    "LO_INC_": 0.5
+}
+DEBT_index_down=np.zeros(n)
+DEBT_index_up=np.zeros(n)
+for type_name in student_type:
+    DEBT_n_name=type_name+'DEBT_N'
+    DEBT_mdn_name=type_name+'DEBT_MDN'
+    DEBT_n=get_data_from_df(DEBT_n_name,True)
+    DEBT_mdn=get_data_from_df(DEBT_mdn_name,True)
+    DEBT_index_up+=DEBT_mdn*DEBT_n*type_weight[type_name]
+    DEBT_index_down+=DEBT_n*type_weight[type_name]
+DEBT_index=DEBT_index_up/DEBT_index_down
+
+def corr(x,y):
+    up=sum(x*y)
+    down=np.sqrt(sum(x**2)*sum(y**2))
+    return up/down

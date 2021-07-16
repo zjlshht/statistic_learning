@@ -76,9 +76,9 @@ bbrr #
     （NONFIRSTGEN FIRSTGEN DEP FEMALE MALE
             IND HI MD LO NOPELL PELL WDRAW，GRAD毕业，无前缀）
  CUML_DEBT_(N，P10，P25，P75，P90) 累计 #似乎没数据
- DEBT_MDN
+ DEBT_MDN 中位数
  DEBT_MDN_SUPP
- DEBT_N
+ DEBT_N 人数
   自己可以用方差描述
   
 ___________________________________________________________________
