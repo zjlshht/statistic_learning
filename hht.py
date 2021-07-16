@@ -48,7 +48,7 @@ df = pd.read_csv('MERGED2018_19_PP.csv')
 column_name = df.columns
 CDR2=get_data_from_df('CDR2')
 CDR3=get_data_from_df('CDR3')
-CDR_index=CDR2/2+CDR3/3
+CDR_index=CDR2/2+CDR3/2
 
 
 n = len(CDR2)
@@ -58,14 +58,12 @@ n = len(CDR2)
 years = ['1', '3', '5', '7']
 student_type = ['',
               'COMPL_',
-              'NONCOM_',
               'HI_INC_',
               'MD_INC_',
               'LO_INC_']
 type_weight = {
     '': 1,
     'COMPL_': 1,
-    "NONCOM_": 1.5,
     "HI_INC_": 0.5,
     "MD_INC_": 1,
     "LO_INC_": 2
@@ -152,15 +150,13 @@ for group in GROUP:
 #DEBT
 student_type = ['',
               'GRAD_',
-              'WDRAW_',
               'HI_INC_',
               'MD_INC_',
               'LO_INC_']
 type_weight = {
     '': 1,
     'GRAD_': 2,
-    "WDRAW_": 0.5,
-    "HI_INC_": 2,
+    "HI_INC_": 1.5,
     "MD_INC_": 1,
     "LO_INC_": 0.5
 }
@@ -179,3 +175,30 @@ def corr(x,y):
     up=sum(x*y)
     down=np.sqrt(sum(x**2)*sum(y**2))
     return up/down
+
+import matplotlib.pyplot as plt
+fig = plt.figure()  
+ax = plt.subplot()
+ax.boxplot(BBRR_index)
+plt.title("BBRR_index")
+
+
+fig = plt.figure()  
+ax = plt.subplot()
+ax.boxplot(DBRR_index)
+plt.title("DBRR_index")
+
+fig = plt.figure()  
+ax = plt.subplot()
+ax.boxplot(DEBT_index)
+plt.title("DEBT_index")
+
+fig = plt.figure()  
+ax = plt.subplot()
+ax.boxplot(CDR_index)
+plt.title("CDR_index")
+
+fig = plt.figure()  
+ax = plt.subplot()
+ax.boxplot(RPY_index)
+plt.title("RPY_index")
