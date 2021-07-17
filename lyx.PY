@@ -249,7 +249,6 @@ for year in RET_year:
         _column=wash_data(column.values,column.mean())
         X_data.append(_column)
 
-X_data.append(Final_index)
 X_data_final=np.array(X_data)
 
 X=X_data_final.T
