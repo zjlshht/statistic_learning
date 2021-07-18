@@ -321,3 +321,52 @@ scaler = StandardScaler()
 scaler.fit(X_train[:, :194])
 X_train[:, :194] = scaler.transform(X_train[:, :194])
 X_test[:, :194] = scaler.transform(X_test[:, :194])
+
+threshold=y_train.mean()
+
+# from xgboost import XGBClassifier
+# model = XGBClassifier()
+# model.fit(X_train,y_train)
+# y_pred=model.predict(X_test)
+# y_pred[y_pred>threshold]=1
+# y_pred[y_pred<=threshold]=0
+
+# plt.scatter(y_test,y_predict,color="r",s=5)
+from sklearn.metrics import roc_curve, precision_recall_curve
+
+def find_index(array, member):
+    if array[0] > member:
+        for i in range(len(array)):
+            if array[i] <= member:
+                return i
+    else:
+        for i in range(len(array)):
+            if array[i] >= member:
+                return i
+
+def plot_curve(y_test,y_pred,name='roc',threshold=0.5):
+    fpr,tpr, _ =roc_curve(y_test,y_pred)
+    if name=='roc':
+        plt.plot(fpr, tpr)
+        plt.title("{} curve of ".format(name))
+        plt.xlabel("false positive rate")
+        plt.ylabel("true positive rate")
+        plt.show()       
+    if name=='pr':
+        precision,recall,thresholds=precision_recall_curve(y_test,y_pred)
+        pr_index=find_index(thresholds,threshold)
+        Precision=precision[pr_index]
+        Recall=recall[pr_index]
+        plt.plot(recall, precision)
+        plt.title("{} curve of ".format(name))
+        plt.xlabel("recall")
+        plt.ylabel("precision")
+        plt.show()
+        return [Precision,Recall]
+ 
+
+
+from sklearn.ensemble import RandomForestClassifier
+clf = RandomForestClassifier(random_state=666)
+clf.fit(X_train, y_train)
+y_pred=clf.predict(X_test)
