@@ -209,12 +209,36 @@ ax = plt.subplot()
 ax.boxplot(RPY_index)
 plt.title("RPY_index in year{}-{}".format(year_number, year_number+1))
 
-BBRR_index[BBRR_index>0.15]=1
-BBRR_index[BBRR_index<=0.15]=0
-CDR_index[CDR_index>0.1]=1
-CDR_index[CDR_index<=0.1]=0
-Final_index = CDR_index+BBRR_index
+# BBRR_index[BBRR_index>0.14]=1
+# BBRR_index[BBRR_index<=0.14]=0
+# DBRR_index[DBRR_index>1]=1
+# DBRR_index[DBRR_index<=1]=0
+# DEBT_index[DEBT_index>25000]=1
+# DEBT_index[DEBT_index<=25000]=0
+# CDR_index[CDR_index>0.1]=1
+# CDR_index[CDR_index<=0.1]=0
+# RPY_index[RPY_index>0.6]=1
+# RPY_index[RPY_index<=0.6]=0
+# Final_index = CDR_index+BBRR_index+DEBT_index+DBRR_index+RPY_index
+# Final_index[Final_index>0]=1
+
+BBRR_index[BBRR_index>0.13]=1
+BBRR_index[BBRR_index<=0.13]=0
+DBRR_index[DBRR_index>0.95]=1
+DBRR_index[DBRR_index<=0.95]=0
+DEBT_index[DEBT_index>23000]=1
+DEBT_index[DEBT_index<=23000]=0
+CDR_index[CDR_index>0.09]=1
+CDR_index[CDR_index<=0.09]=0
+RPY_index[RPY_index>0.6]=1
+RPY_index[RPY_index<=0.6]=0
+Final_index = CDR_index+BBRR_index+DEBT_index+DBRR_index+RPY_index
 Final_index[Final_index>0]=1
+
+fig = plt.figure()
+ax = plt.subplot()
+ax.boxplot(Final_index)
+plt.title("Final_index in year{}-{}".format(year_number, year_number+1))
 
 X_data = []
 number_type = ['INEXPFTE', 'AVGFACSAL', 'C100_4_POOLED', 'C100_L4_POOLED', 'C200_4_POOLED',
@@ -344,11 +368,11 @@ def find_index(array, member):
             if array[i] >= member:
                 return i
 
-def plot_curve(y_test,y_pred,name='roc',threshold=0.5):
+def plot_curve(y_test,y_pred,name='roc',threshold=0.5,model=''):
     fpr,tpr, _ =roc_curve(y_test,y_pred)
     if name=='roc':
         plt.plot(fpr, tpr)
-        plt.title("{} curve of ".format(name))
+        plt.title("{} curve of {}".format(name,model))
         plt.xlabel("false positive rate")
         plt.ylabel("true positive rate")
         plt.show()       
@@ -358,7 +382,9 @@ def plot_curve(y_test,y_pred,name='roc',threshold=0.5):
         Precision=precision[pr_index]
         Recall=recall[pr_index]
         plt.plot(recall, precision)
-        plt.title("{} curve of ".format(name))
+        if len(recall)<10:
+            plt.scatter(recall,precision,color="r",s=10)
+        plt.title("{} curve of {}".format(name,model))
         plt.xlabel("recall")
         plt.ylabel("precision")
         plt.show()
@@ -366,7 +392,52 @@ def plot_curve(y_test,y_pred,name='roc',threshold=0.5):
  
 
 
-from sklearn.ensemble import RandomForestClassifier
-clf = RandomForestClassifier(random_state=666)
+from sklearn.ensemble import RandomForestRegressor
+clf = RandomForestRegressor(n_estimators=100)
 clf.fit(X_train, y_train)
 y_pred=clf.predict(X_test)
+plot_curve(y_test,y_pred,name='pr',model='RandomForest with max tree number=50')
+
+clf = RandomForestRegressor()
+clf.fit(X_train, y_train)
+y_pred=clf.predict(X_test)
+plot_curve(y_test,y_pred,name='pr',model='RandomForest with max tree number=100')
+
+from sklearn.linear_model import LogisticRegression
+clf = LogisticRegression()
+clf.fit(X_train, y_train)
+y_pred=clf.predict_proba(X_test)[:,1]
+plot_curve(y_test,y_pred,name='pr',model='LogisticRegression')
+
+from sklearn.svm import SVR
+clf=SVR(kernel='poly',degree=10)
+clf.fit(X_train, y_train)
+y_pred=clf.predict(X_test)
+plot_curve(y_test,y_pred,name='pr',model='SVM with poly in ten degree')
+
+clf=SVR(kernel='poly',degree=6)
+clf.fit(X_train, y_train)
+y_pred=clf.predict(X_test)
+plot_curve(y_test,y_pred,name='pr',model='SVM with poly in six degree')
+
+from sklearn.tree import DecisionTreeRegressor
+clf=DecisionTreeRegressor()
+clf.fit(X_train, y_train)
+y_pred=clf.predict(X_test)
+plot_curve(y_test,y_pred,name='pr',model='DecisionTree')
+
+from sklearn.ensemble import AdaBoostRegressor
+clf=AdaBoostRegressor(n_estimators=100)
+clf.fit(X_train, y_train)
+y_pred=clf.predict(X_test)
+plot_curve(y_test,y_pred,name='pr',model='AdaBoostRegressor with max tree number=100')
+
+clf=AdaBoostRegressor(n_estimators=50)
+clf.fit(X_train, y_train)
+y_pred=clf.predict(X_test)
+plot_curve(y_test,y_pred,name='pr',model='AdaBoostRegressor with max tree number=50')
+
+clf=AdaBoostRegressor(n_estimators=150)
+clf.fit(X_train, y_train)
+y_pred=clf.predict(X_test)
+plot_curve(y_test,y_pred,name='pr',model='AdaBoostRegressor with max tree number=150')
