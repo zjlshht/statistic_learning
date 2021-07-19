@@ -439,9 +439,7 @@ for year in RET_year:
 
 X_data.append(standard_index)
 X_data_final=np.array(X_data)
-# X_save=X_data_final
-# final=pd.DataFrame(X_save)
-# final.to_csv('Data.csv',float_format='%.2f', na_rep="NAN!")
+
 
 X=X_data_final[:79].T
 y=X_data_final[79]
@@ -468,21 +466,7 @@ plt.xlabel("y_true")
 plt.ylabel("y_predict")
 plt.legend(loc='upper left')
 plt.show()
-# from sklearn.linear_model import LogisticRegression
-# model=LogisticRegression()
-# model.fit(X_train,y_train)
-# train_score=model.score(X_train,y_train)
-# test_score=model.score(X_test,y_test)
-# y_predict=model.predict(X_test)
-# y_model_pred=model.predict(X_train)
-# plt.scatter(y_test,y_predict,color="r",s=5,  label="train data:R^2={:.2f}".format(train_score))
-# plt.scatter(y_train,y_model_pred,color="b",s=5,  label="test data:R^2={:.2f}".format(test_score))
-# plt.plot([0,1],[0,1],color="g",linestyle="-", linewidth=1)
-# plt.title("true and predict")
-# plt.xlabel("y_true")
-# plt.ylabel("y_predict")
-# plt.legend(loc='upper left')
-# plt.show()
+
 from sklearn.svm import SVR
 model=SVR(kernel='poly')
 model.fit(X_train,y_train)
